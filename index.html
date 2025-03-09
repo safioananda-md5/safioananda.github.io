@@ -3,52 +3,282 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Cute Animal Background</title>
+    <title>It's Me</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link rel="icon" href="https://media.geeksforgeeks.org/wp-content/cdn-uploads/gfg_200X200.png"type="image/x-icon" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap');
+
+        body { margin: 0; overflow: hidden;}
+        canvas { display: block; }
+        
+        /* Title Styling */
+        .title {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 48px;
+            font-weight: bold;
+            font-family: 'Oswald', sans-serif;
+            letter-spacing: 5px;
+            color: white;
+            text-align: center;
+            padding: 20px 40px;
+            border-radius: 30px;
+            background: linear-gradient(45deg, rgba(0, 0, 128, 0.2), rgba(47, 79, 79, 0.2), rgba(0, 0, 0, 0.2), rgba(70, 130, 180, 0.2));
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Music Overlay */
+        .music-overlay {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            color: silver;
+            padding: 10px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Oswald', sans-serif;
+            letter-spacing: 1px;
+        }
+        .music-overlay img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+        .music-info {
+            display: flex;
+            flex-direction: column;
+        }
+        .music-button {
+            background: linear-gradient(45deg, rgba(0, 0, 128, 0.5), rgba(47, 79, 79, 0.5), rgba(0, 0, 0, 0.5), rgba(70, 130, 180, 0.5));;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            margin-left: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .music-icon{
+            opacity: 70%;
+        }
+
+        .warning{
+            font-size: 10px;
+            opacity: 50%;
+        }
+
+        <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Rain Animation</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap');
+        
         body { margin: 0; overflow: hidden; }
         canvas { display: block; }
+        
+        /* Title Styling */
+        .title {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 50px;
+            font-weight: bold;
+            font-family: 'Oswald', sans-serif;
+            color: white;
+            text-align: center;
+            padding: 20px 40px;
+            border-radius: 30px;
+            background: linear-gradient(45deg, rgba(25, 25, 112, 0.2), rgba(47, 79, 79, 0.2), rgba(0, 0, 0, 0.2), rgba(70, 130, 180, 0.2));
+            box-shadow: 5px 5px 15px rgba(255, 255, 255, 0.2);
+            text-shadow: 2px 2px 10px rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Background overlay for opacity */
+        .background-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: -1;
+        }
+        
+        /* Like Button Overlay */
+        .like-overlay {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            font-family: 'Oswald', sans-serif;
+            font-size: 20px;
+            cursor: pointer;
+            color: silver;
+            opacity: 70%;
+        }
+        .like-overlay img {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            opacity: 70%;
+        }
+
+        /* Visitor Counter Overlay */
+        .visitor-overlay {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            font-family: 'Oswald', sans-serif;
+            font-size: 20px;
+            letter-spacing: 1px;
+            color: silver;
+            opacity: 70%;
+        }
     </style>
 </head>
 <body>
-    <h1>Kharisma Safio Ananda</h1>
+    <!-- Visitor Counter -->
+    <div class="visitor-overlay">
+        Ghosts that visited me : &nbsp <span id="visitor-count"> 0 </span> 
+    </div>
+
+    <div class="title">KHARISMA SAFIO ANANDA</div>
+    
+    <!-- Music Overlay -->
+    <div class="music-overlay">
+        <img src="wave-sound.png" alt="Music Icon" class="music-icon">
+        <div class="music-info">
+            <div>Closer ft. Halsey</div>
+            <div>The Chainsmokers</div>
+            <div class="warning">Not all browsers are supported.</div>
+        </div>
+        <button class="music-button" onclick="toggleMusic()">Sound Off</button>
+    </div>
+    
+    <audio id="bg-music" loop autoplay>
+        <source src="music.mp3" type="audio/mp3"/>
+    </audio>
+
+    <!-- Like Button -->
+    <div class="like-overlay" onclick="increaseLike()">
+        <img src="love.png" alt="Like" class="music-icon">
+        <span id="like-count">0</span>
+    </div>
+
     <script>
+        let likeCount = localStorage.getItem('likeCount') || 0;
+        document.getElementById('like-count').textContent = likeCount;
+        
+        function increaseLike() {
+            likeCount++;
+            localStorage.setItem('likeCount', likeCount);
+            document.getElementById('like-count').textContent = likeCount;
+        }
+
+        let visitorCount = localStorage.getItem('visitorCount') || 0;
+        visitorCount++;
+        localStorage.setItem('visitorCount', visitorCount);
+        document.getElementById('visitor-count').textContent = visitorCount;
+
         // Scene setup
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 500);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
+        
+        // Load background image (Hutan hujan dengan langit agak gelap)
+        const loader = new THREE.TextureLoader();
+        loader.load('', function(texture) { // Gambar hutan hujan
+            texture.wrapS = THREE.RepeatWrapping;
+            texture.wrapT = THREE.RepeatWrapping;
+            texture.repeat.set(1, 1); // Memastikan gambar tidak stretch
+            texture.minFilter = THREE.LinearFilter;
+            texture.magFilter = THREE.LinearFilter;
+            scene.background = texture;
+        });
         
         // Lighting
         const light = new THREE.AmbientLight(0xffffff, 1);
         scene.add(light);
         
-        // Create a cute animal (simple rounded cube for now)
-        const geometry = new THREE.BoxGeometry(1, 1, 1);
-        const material = new THREE.MeshStandardMaterial({ color: 0xffc0cb });
-        const animal = new THREE.Mesh(geometry, material);
-        animal.position.y = 0.5;
-        scene.add(animal);
+        // Raindrop properties (Reduced amount and slower movement)
+        const rainCount = 200; // Reduce rain count for sparser effect
+        const raindrops = [];
+        let windDirection = new THREE.Vector3(0, -0.12, 0); // Lebih lambat turun
         
-        // Ground plane
-        const groundGeometry = new THREE.PlaneGeometry(10, 10);
-        const groundMaterial = new THREE.MeshStandardMaterial({ color: 0x8FBC8F, side: THREE.DoubleSide });
-        const ground = new THREE.Mesh(groundGeometry, groundMaterial);
-        ground.rotation.x = -Math.PI / 2;
-        scene.add(ground);
+        // Update wind direction based on mouse movement
+        document.addEventListener('mousemove', (event) => {
+            const x = (event.clientX / window.innerWidth) * 2 - 1;
+            windDirection.x = x * 0.05; // Adjust the wind effect based on mouse position
+        });
+        
+        // Create raindrops
+        const rainGeometry = new THREE.CylinderGeometry(0.02, 0.02, 1.0, 8);
+        const rainMaterial = new THREE.MeshBasicMaterial({ 
+            color: 0xFFB6C1, 
+            transparent: true,  // Mengaktifkan transparansi
+            opacity: 0.5        // Atur level transparansi (0 = transparan, 1 = solid) 
+        });
+        
+        for (let i = 0; i < rainCount; i++) {
+            const drop = new THREE.Mesh(rainGeometry, rainMaterial);
+            drop.position.set((Math.random() - 0.5) * 50, Math.random() * 20 + 5, (Math.random() - 0.5) * 50);
+            drop.velocity = new THREE.Vector3(0, -0.10, 0);
+            scene.add(drop);
+            raindrops.push(drop);
+        }
         
         // Camera position
-        camera.position.set(2, 2, 5);
-        camera.lookAt(0, 0.5, 0);
+        camera.position.set(0, 10, 20);
+        camera.lookAt(0, 5, 0);
         
         // Animation loop
         function animate() {
             requestAnimationFrame(animate);
-            animal.rotation.y += 0.01;
+            
+            raindrops.forEach(drop => {
+                drop.position.add(drop.velocity);
+                if (drop.position.y < -20) { // Memperpanjang batas bawah agar hujan tidak hilang terlalu cepat
+                    drop.position.set((Math.random() - 0.5) * 50, Math.random() * 40 + 10, (Math.random() - 0.5) * 50); // Reset posisi ke atas
+                }
+                drop.velocity = windDirection.clone(); // Update velocity to follow mouse direction
+            });
+            
             renderer.render(scene, camera);
         }
         animate();
+
+        // Toggle music
+        function toggleMusic() {
+            const music = document.getElementById('bg-music');
+            const button = document.querySelector('.music-button');
+            if (music.paused) {
+                music.play();
+                button.textContent = "Sound On";
+            } else {
+                music.pause();
+                button.textContent = "Sound Off";
+            }
+        }
     </script>
 </body>
 </html>
